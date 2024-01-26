@@ -44,6 +44,7 @@ final class PhotosView: UIViewController {
         let collectionView = UICollectionView(frame: CGRect(), collectionViewLayout: layout)
         collectionView.register(PhotoCell.self, forCellWithReuseIdentifier: "PhotoCell")
         collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.accessibilityIdentifier = "collection-view"
         return collectionView
     }()
     
@@ -118,6 +119,7 @@ final class PhotoDetails: UIViewController {
     var closeButton: UIButton = {
         let button = UIButton(type: .close)
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.accessibilityIdentifier = "close-button"
         return button
     }()
     
@@ -132,6 +134,7 @@ final class PhotoDetails: UIViewController {
         button.configuration?.cornerStyle = .medium
         button.semanticContentAttribute = .forceRightToLeft
         button.translatesAutoresizingMaskIntoConstraints = false
+        button.accessibilityIdentifier = "process-image-button"
         return button
     }()
     
@@ -141,6 +144,8 @@ final class PhotoDetails: UIViewController {
         imageView.layer.cornerRadius = 34
         imageView.contentMode = .scaleAspectFill
         imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.accessibilityIdentifier = "photo"
+        imageView.isUserInteractionEnabled = true
         return imageView
     }()
     
@@ -151,6 +156,13 @@ final class PhotoDetails: UIViewController {
         canvas.translatesAutoresizingMaskIntoConstraints = false
         return canvas
     }()
+    
+    @objc func onPinchGestureRecognizer(recognizer: UIPinchGestureRecognizer) {
+        if let view = recognizer.view {
+            view.transform = view.transform.scaledBy(x: recognizer.scale, y: recognizer.scale)
+            recognizer.scale = 1
+        }
+    }
     
     @MainActor func processImage(_ image: UIImage?) -> UIImage? {
         guard let image else { return nil }
@@ -197,7 +209,6 @@ final class PhotoDetails: UIViewController {
             photo.trailingAnchor.constraint(equalTo: canvas.trailingAnchor, constant: -32.0),
             photo.topAnchor.constraint(equalTo: canvas.topAnchor, constant: 64),
             photo.heightAnchor.constraint(equalToConstant: 256.0),
-            photo.widthAnchor.constraint(equalToConstant: 256.0),
             closeButton.topAnchor.constraint(equalTo: canvas.topAnchor, constant: 16.0),
             closeButton.trailingAnchor.constraint(equalTo: canvas.trailingAnchor, constant: -16.0),
             closeButton.heightAnchor.constraint(equalToConstant: 32.0),
@@ -208,6 +219,9 @@ final class PhotoDetails: UIViewController {
             processImageButton.heightAnchor.constraint(equalToConstant: 60.0),
             processImageButton.topAnchor.constraint(equalTo: photo.bottomAnchor, constant: 10.0)
         ])
+        
+        let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(onPinchGestureRecognizer))
+        photo.addGestureRecognizer(pinchGesture)
         
         closeButton.addAction(UIAction(handler: { [weak self] UIAction in
             self?.delegate?.onPopupClose()
@@ -231,7 +245,6 @@ final class PhotoCell: UICollectionViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
-    
     
     override init(frame: CGRect) {
         super.init(frame: frame)

@@ -11,6 +11,7 @@ struct PhoneNuberView: View {
     
     @Binding var user: User
     @State var showError: Bool = false
+    @FocusState var isInputActive: Bool
     
     var isCorrectPhoneNumber: Bool {
         let phoneRegex = #"(?<!\w)(\(?(\+|00)?48\)?)?[ -]?\d{3}[ -]?\d{3}[ -]?\d{3}(?!\w)"#
@@ -30,17 +31,10 @@ struct PhoneNuberView: View {
             
             HStack {
                 Spacer()
-                TextField("Type your phone number", text: $user.phoneNumber)
-                    .padding()
-                    .background(.white)
-                    .clipShape(.buttonBorder)
-                    .shadow(radius: 6)
-                    .padding(.horizontal, 24)
-                    .textContentType(.telephoneNumber)
-                    .keyboardType(.phonePad)
-                    .onChange(of: user.phoneNumber) {
-                        showError = !isCorrectPhoneNumber
-                    }
+                CustomInput(text: "Type your phone number", identifier: "phone-number-input", field: $user.phoneNumber, isInputActive: _isInputActive)
+                .onChange(of: user.phoneNumber) {
+                    showError = !isCorrectPhoneNumber
+                }
                 Spacer()
             }
             
@@ -63,8 +57,16 @@ struct PhoneNuberView: View {
             .tint(.accentColor)
             .buttonStyle(.bordered)
             .controlSize(.large)
-            .accessibilityIdentifier("add-to-favorites-button")
+            .accessibilityIdentifier("continue-button")
             .disabled(!isCorrectPhoneNumber)
+        }
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Done") {
+                    isInputActive = false
+                }
+            }
         }
         .navigationTitle("Your Details")
     }

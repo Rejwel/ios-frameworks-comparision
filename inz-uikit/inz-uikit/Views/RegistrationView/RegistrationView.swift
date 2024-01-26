@@ -38,7 +38,7 @@ final class ContinueButton: UIButton {
         tintColor = .tintColor
         semanticContentAttribute = .forceRightToLeft
         translatesAutoresizingMaskIntoConstraints = false
-        accessibilityIdentifier = "add-to-favorites-button"
+        accessibilityIdentifier = "continue-button"
     }
     
     required init?(coder: NSCoder) {
@@ -56,6 +56,7 @@ final class CustomInput: UITextField {
         layer.shadowOffset = CGSize(width: 0, height: 0)
         layer.cornerRadius = 8.0
         translatesAutoresizingMaskIntoConstraints = false
+        addDoneButton()
     }
     
     required init?(coder: NSCoder) {
@@ -70,6 +71,18 @@ final class CustomInput: UITextField {
     override func editingRect(forBounds bounds: CGRect) -> CGRect {
         let rect = super.editingRect(forBounds: bounds)
         return rect.inset(by: UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
+    }
+}
+
+extension UITextField {
+    
+    func addDoneButton() {
+        let keyboardToolbar = UIToolbar()
+        keyboardToolbar.sizeToFit()
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(resignFirstResponder))
+        keyboardToolbar.items = [flexibleSpace, doneButton]
+        self.inputAccessoryView = keyboardToolbar
     }
 }
 
@@ -90,6 +103,7 @@ final class BirthDateView: UIViewController {
         picker.datePickerMode = .date
         picker.preferredDatePickerStyle = .inline
         picker.translatesAutoresizingMaskIntoConstraints = false
+        picker.accessibilityIdentifier = "calendar"
         return picker
     }()
     
@@ -175,6 +189,7 @@ final class PhoneNumberView: UIViewController {
         let input = CustomInput()
         input.keyboardType = .phonePad
         input.placeholder = "Type your phone number"
+        input.accessibilityIdentifier = "phone-number-input"
         return input
     }()
     
@@ -254,12 +269,14 @@ final class RegistrationDetailsView: UIViewController {
     var firstNameInput: CustomInput = {
         let input = CustomInput()
         input.placeholder = "Type your first name"
+        input.accessibilityIdentifier = "first-name-input"
         return input
     }()
     
     var lastNameInput: CustomInput = {
         let input = CustomInput()
         input.placeholder = "Type your last name"
+        input.accessibilityIdentifier = "last-name-input"
         return input
     }()
     
@@ -268,13 +285,16 @@ final class RegistrationDetailsView: UIViewController {
         input.keyboardType = .emailAddress
         input.autocapitalizationType = .none
         input.placeholder = "Type your email"
+        input.accessibilityIdentifier = "email-input"
         return input
     }()
     
     var passwordInput: CustomInput = {
         let input = CustomInput()
         input.isSecureTextEntry = true
+        input.textContentType = .oneTimeCode
         input.placeholder = "Type your password"
+        input.accessibilityIdentifier = "password-input"
         return input
     }()
     

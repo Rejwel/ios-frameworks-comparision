@@ -93,6 +93,7 @@
 			children = (
 				F128FA432AF8DE8D00271EDB /* inz-uikit */,
 				F128FA5A2AF8DE8F00271EDB /* inz-uikitTests */,
+				F128FA462AF8DE8D00271EDB /* SceneDelegate.swift */,
 				F128FA642AF8DE8F00271EDB /* inz-uikitUITests */,
 				F128FA422AF8DE8D00271EDB /* Products */,
 			);
@@ -113,7 +114,6 @@
 			children = (
 				F1BC6A672B5AA606005180C7 /* Views */,
 				F128FA442AF8DE8D00271EDB /* AppDelegate.swift */,
-				F128FA462AF8DE8D00271EDB /* SceneDelegate.swift */,
 				F128FA4A2AF8DE8D00271EDB /* Main.storyboard */,
 				F128FA4D2AF8DE8F00271EDB /* Assets.xcassets */,
 				F128FA4F2AF8DE8F00271EDB /* LaunchScreen.storyboard */,

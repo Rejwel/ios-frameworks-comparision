@@ -14,7 +14,7 @@ struct SquaredImage: Identifiable {
 }
 
 var images = [
-    SquaredImage(image: Image(.foodCake)),
+    SquaredImage(id: UUID(uuidString: "66e8fcd5-0376-41da-ae3d-031327d7c81b")!, image: Image(.foodCake)),
     SquaredImage(image: Image(.foodBurger)),
     SquaredImage(image: Image(.foodPasta)),
     SquaredImage(image: Image(.foodSalad)),
@@ -37,7 +37,7 @@ var images = [
     SquaredImage(image: Image(.foodFishSoup)),
     SquaredImage(image: Image(.foodIceCream)),
     SquaredImage(image: Image(.foodPumpkinSoup)),
-    SquaredImage(image: Image(.foodChickenWings)),
+    SquaredImage(id: UUID(uuidString: "2695c694-6016-4994-bb7c-689868e67f3f")!, image: Image(.foodChickenWings)),
 ]
 
 let columns: [GridItem] = Array(repeating: GridItem(.flexible()), count: 3)
@@ -63,12 +63,14 @@ struct PhotosView: View {
                                     .frame(width: 96, height: 96)
                                     .clipShape(.buttonBorder)
                             }
+                            .accessibilityIdentifier("photo-button-\(image.id)")
                         }
                     }
                 }
                 .frame(height: 600)
                 .blur(radius: selectedImage == nil ? 0.0 : 20.0)
                 .navigationTitle("Your photos")
+                .accessibilityIdentifier("scroll-view")
                 
                 if selectedImage != nil {
                     PhotoDetails(selectedImage: $selectedImage)
@@ -84,6 +86,7 @@ struct PhotoDetails: View {
     @Binding var selectedImage: Image?
     @State private var currentZoom = 0.0
     @State private var scale = 1.0
+    @State private var lastScale = 1.0
     
     @MainActor func processImage(_ image: Image?) -> Image? {
         guard let uiImage = ImageRenderer(content: image).uiImage else {
@@ -117,10 +120,12 @@ struct PhotoDetails: View {
     var magnification: some Gesture {
         MagnificationGesture()
             .onChanged { state in
-                scale = state
+                let delta = state / lastScale
+                scale *= delta
+                lastScale = state
             }
             .onEnded { state in
-                
+                lastScale = 1.0
             }
     }
     
@@ -134,6 +139,7 @@ struct PhotoDetails: View {
                 .frame(width: 256, height: 256)
                 .clipShape(.buttonBorder)
                 .gesture(magnification)
+                .accessibilityIdentifier("photo")
             
             Button {
                 selectedImage = processImage(selectedImage)
@@ -144,7 +150,7 @@ struct PhotoDetails: View {
             .tint(.teal)
             .buttonStyle(.bordered)
             .controlSize(.large)
-            .accessibilityIdentifier("add-to-favorites-button")
+            .accessibilityIdentifier("process-image-button")
         }
         .frame(width: 325, height: 400)
         .background(Color(.systemBackground))
@@ -159,6 +165,7 @@ struct PhotoDetails: View {
             } label: {
                 XDismissButton()
             }
+            .accessibilityIdentifier("close-button")
         
         }
     }

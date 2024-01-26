@@ -33,6 +33,7 @@ struct BirthDateView: View {
             DatePicker("Select your birthdate", selection: $user.birthDate, in: ...Date.now, displayedComponents: .date)
                 .datePickerStyle(.graphical)
                 .padding()
+                .accessibilityIdentifier("calendar")
                 .onChange(of: user.birthDate) {
                     showError = !isOver18YearsOld
                 }
@@ -56,7 +57,7 @@ struct BirthDateView: View {
             .tint(.accentColor)
             .buttonStyle(.bordered)
             .controlSize(.large)
-            .accessibilityIdentifier("add-to-favorites-button")
+            .accessibilityIdentifier("continue-button")
             .disabled(!isOver18YearsOld)
    
         }

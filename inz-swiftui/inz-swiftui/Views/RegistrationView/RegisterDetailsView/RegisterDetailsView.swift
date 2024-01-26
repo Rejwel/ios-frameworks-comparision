@@ -11,6 +11,7 @@ struct RegisterDetailsView: View {
     
     @Binding var user: User
     @State var showError: Bool = false
+    @FocusState var isInputActive: Bool
     
     var isCorrectEmail: Bool {
         let emailRegex = #"^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$"#
@@ -40,13 +41,7 @@ struct RegisterDetailsView: View {
             VStack(spacing: 16) {
                 HStack {
                     Spacer()
-                    TextField("Type your first name", text: $user.firstName)
-                        .padding()
-                        .background(.white)
-                        .clipShape(.buttonBorder)
-                        .shadow(radius: 6)
-                        .padding(.horizontal, 24)
-                        .textContentType(.givenName)
+                    CustomInput(text: "Type your first name", identifier: "first-name-input", field: $user.firstName, isInputActive: _isInputActive)
                         .onChange(of: user.firstName) {
                             showError = !user.firstName.isEmpty
                         }
@@ -55,13 +50,7 @@ struct RegisterDetailsView: View {
                 
                 HStack {
                     Spacer()
-                    TextField("Type your last name", text: $user.lastName)
-                        .padding()
-                        .background(.white)
-                        .clipShape(.buttonBorder)
-                        .shadow(radius: 6)
-                        .padding(.horizontal, 24)
-                        .textContentType(.familyName)
+                    CustomInput(text: "Type your last name", identifier: "last-name-input", field: $user.lastName, isInputActive: _isInputActive)
                         .onChange(of: user.lastName) {
                             showError = !user.lastName.isEmpty
                         }
@@ -70,13 +59,8 @@ struct RegisterDetailsView: View {
                 
                 HStack {
                     Spacer()
-                    TextField("Type your email", text: $user.email)
+                    CustomInput(text: "Type your email", identifier: "email-input", field: $user.email, isInputActive: _isInputActive)
                         .textInputAutocapitalization(.never)
-                        .padding()
-                        .background(.white)
-                        .clipShape(.buttonBorder)
-                        .shadow(radius: 6)
-                        .padding(.horizontal, 24)
                         .textContentType(.emailAddress)
                         .onChange(of: user.email) {
                             showError = !isCorrectEmail
@@ -92,7 +76,10 @@ struct RegisterDetailsView: View {
                         .clipShape(.buttonBorder)
                         .shadow(radius: 6)
                         .padding(.horizontal, 24)
-                        .textContentType(.emailAddress)
+                        .textContentType(.password)
+                        .submitLabel(.done)
+                        .accessibilityIdentifier("password-input")
+                        .focused($isInputActive)
                         .onChange(of: user.password) {
                             showError = !isCorrectEmail
                         }
@@ -119,10 +106,39 @@ struct RegisterDetailsView: View {
             .tint(.accentColor)
             .buttonStyle(.bordered)
             .controlSize(.large)
-            .accessibilityIdentifier("add-to-favorites-button")
+            .accessibilityIdentifier("continue-button")
             .disabled(user.firstName.isEmpty || user.lastName.isEmpty || !isCorrectPassword || !isCorrectEmail)
         }
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Done") {
+                    isInputActive = false
+                }
+            }
+        }
         .navigationTitle("Your Phone Number")
+    }
+}
+
+struct CustomInput: View {
+    
+    var text: String
+    var identifier: String
+    @Binding var field: String
+    @FocusState var isInputActive: Bool
+ 
+    var body: some View {
+        TextField(text, text: $field)
+            .padding()
+            .background(.white)
+            .clipShape(.buttonBorder)
+            .shadow(radius: 6)
+            .padding(.horizontal, 24)
+            .textContentType(.familyName)
+            .submitLabel(.done)
+            .accessibilityIdentifier(identifier)
+            .focused($isInputActive)
     }
 }
 
