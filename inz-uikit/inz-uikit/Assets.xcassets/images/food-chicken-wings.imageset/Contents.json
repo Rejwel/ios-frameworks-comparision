@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "food-chicken-wings.jpg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
