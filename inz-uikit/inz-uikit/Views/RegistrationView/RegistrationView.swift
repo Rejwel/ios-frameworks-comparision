@@ -7,6 +7,15 @@
 
 import UIKit
 
+struct User {
+    var birthDate: Date
+    var phoneNumber: String
+    var email: String
+    var firstName: String
+    var lastName: String
+    var password: String
+}
+
 final class ErrorLabel: UILabel {
     
     override init(frame: CGRect) {
@@ -116,6 +125,13 @@ final class BirthDateView: UIViewController {
         return label
     }()
     
+    var user: User = .init(birthDate: Date(),
+                           phoneNumber: "",
+                           email: "",
+                           firstName: "",
+                           lastName: "",
+                           password: "")
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -152,6 +168,7 @@ final class BirthDateView: UIViewController {
                 self.continueButton.isEnabled = true
                 self.errorLabel.isHidden = true
                 self.birthDateLabel.text = "🎁 \(self.calendar.date.formatted(date: .long, time: .omitted)) 🎉"
+                self.user.birthDate = self.calendar.date
             } else {
                 self.continueButton.isEnabled = false
                 self.errorLabel.isHidden = false
@@ -161,7 +178,9 @@ final class BirthDateView: UIViewController {
         
         continueButton.addAction(UIAction { [weak self] _ in
             guard let self else { return }
-            self.navigationController?.pushViewController(PhoneNumberView(), animated: true)
+            let vc = PhoneNumberView()
+            vc.user = self.user
+            self.navigationController?.pushViewController(vc, animated: true)
         }, for: .touchUpInside)
     }
     
@@ -192,6 +211,8 @@ final class PhoneNumberView: UIViewController {
         input.accessibilityIdentifier = "phone-number-input"
         return input
     }()
+    
+    var user: User?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -226,6 +247,7 @@ final class PhoneNumberView: UIViewController {
             if self.isCorrectPhoneNumber(phoneNumber: phoneNumber) {
                 self.continueButton.isEnabled = true
                 self.errorLabel.isHidden = true
+                self.user?.phoneNumber = phoneNumber
             } else {
                 self.continueButton.isEnabled = false
                 self.errorLabel.isHidden = false
@@ -234,6 +256,8 @@ final class PhoneNumberView: UIViewController {
         
         continueButton.addAction(UIAction { [weak self] _ in
             guard let self else { return }
+            let vc = RegistrationDetailsView()
+            vc.user = self.user
             self.navigationController?.pushViewController(RegistrationDetailsView(), animated: true)
         }, for: .touchUpInside)
     }
@@ -306,6 +330,8 @@ final class RegistrationDetailsView: UIViewController {
         return view
     }()
     
+    var user: User?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -346,6 +372,7 @@ final class RegistrationDetailsView: UIViewController {
             if isValidForm() {
                 self.errorLabel.isHidden = true
                 self.continueButton.isEnabled = true
+                self.user?.firstName = firstNameInput.text!
             } else {
                 self.errorLabel.isHidden = false
                 self.continueButton.isEnabled = false
@@ -358,6 +385,7 @@ final class RegistrationDetailsView: UIViewController {
             if isValidForm() {
                 self.errorLabel.isHidden = true
                 self.continueButton.isEnabled = true
+                self.user?.lastName = lastNameInput.text!
             } else {
                 self.errorLabel.isHidden = false
                 self.continueButton.isEnabled = false
@@ -370,6 +398,7 @@ final class RegistrationDetailsView: UIViewController {
             if isValidForm() {
                 self.errorLabel.isHidden = true
                 self.continueButton.isEnabled = true
+                self.user?.email = emailInput.text!
             } else {
                 self.errorLabel.isHidden = false
                 self.continueButton.isEnabled = false
@@ -382,6 +411,7 @@ final class RegistrationDetailsView: UIViewController {
             if isValidForm() {
                 self.errorLabel.isHidden = true
                 self.continueButton.isEnabled = true
+                self.user?.password = passwordInput.text!
             } else {
                 self.errorLabel.isHidden = false
                 self.continueButton.isEnabled = false
@@ -390,6 +420,8 @@ final class RegistrationDetailsView: UIViewController {
         
         continueButton.addAction(UIAction { [weak self] _ in
             guard let self else { return }
+            let vc = FinishedView()
+            vc.user = self.user
             self.navigationController?.pushViewController(FinishedView(), animated: true)
         }, for: .touchUpInside)
     }
@@ -436,6 +468,8 @@ final class FinishedView: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
+    var user: User?
     
     override func viewDidLoad() {
         super.viewDidLoad()

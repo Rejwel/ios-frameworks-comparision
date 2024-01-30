@@ -19,13 +19,20 @@ struct User {
 @main
 struct inz_swiftuiApp: App {
     
-    @State var user = User(birthDate: Date(), phoneNumber: "", email: "", firstName: "", lastName: "", password: "")
+    @State var user = User(birthDate: Date(),
+                           phoneNumber: "",
+                           email: "",
+                           firstName: "",
+                           lastName: "",
+                           password: "")
     
     var body: some Scene {
         WindowGroup {
-//            MealListView()
-//            RegistrationView(user: $user)
             PhotosView()
         }
     }
 }
+
+
+//            MealListView()
+//            RegistrationView(user: $user)

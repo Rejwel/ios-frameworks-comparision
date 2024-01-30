@@ -14,11 +14,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let _ = (scene as? UIWindowScene) else { return }
         
-//        let navc = UINavigationController(rootViewController: MealListView())
-//        let navc = UINavigationController(rootViewController: BirthDateView())
         let navc = UINavigationController(rootViewController: PhotosView())
         window?.rootViewController = navc
         window?.makeKeyAndVisible()
     }
 }
 
+//        let navc = UINavigationController(rootViewController: MealListView())
+//        let navc = UINavigationController(rootViewController: BirthDateView())
