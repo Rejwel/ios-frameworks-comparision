@@ -117,7 +117,7 @@ struct RegisterDetailsView: View {
                 }
             }
         }
-        .navigationTitle("Your Phone Number")
+        .navigationTitle("Your Details")
     }
 }
 

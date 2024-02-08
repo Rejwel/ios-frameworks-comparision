@@ -68,7 +68,7 @@ struct PhoneNuberView: View {
                 }
             }
         }
-        .navigationTitle("Your Details")
+        .navigationTitle("Your Phone Number")
     }
 }
 

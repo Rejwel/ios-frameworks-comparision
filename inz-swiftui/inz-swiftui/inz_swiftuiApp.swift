@@ -28,7 +28,8 @@ struct inz_swiftuiApp: App {
     
     var body: some Scene {
         WindowGroup {
-            PhotosView()
+            RegistrationView(user: $user)
+//            PhotosView()
         }
     }
 }
